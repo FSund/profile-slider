@@ -8,12 +8,13 @@ import os.path
 
 
 class ProfileSlider:
-    def __init__(self,
-                 path="./",
-                 files=["massFlow.csv", "pressure.csv", "temperature.csv"],
-                 labels=["Mass flow [kg/s]",
-                         "Pressure [Pa]", "Temperature [K]"],
-                 load_x_from_file=True, n_max=0):
+    def __init__(
+            self,
+            path="./",
+            files=["massFlow.csv", "pressure.csv", "temperature.csv"],
+            labels=["Mass flow [kg/s]", "Pressure [Pa]", "Temperature [K]"],
+            load_x_from_file=True, n_max=0
+    ):
 
         # support for single file (files and labels as strings instead of
         # iterable/list)
@@ -100,7 +101,8 @@ class ProfileSlider:
             ax.set_ylabel(label, color=color)
             ax.tick_params(axis='y', colors=color)
 
-            # fix labels and locations, since twinx puts all twin axes on right side
+            # fix labels and locations, since twinx puts all twin axes on the
+            # right side
             ax.get_yaxis().set_label_position("left")
             ax.get_yaxis().set_tick_params(right='off', left='on',
                                            labelleft=True, labelright=False)
@@ -112,7 +114,9 @@ class ProfileSlider:
 
         # move axes so they all show
         for i in range(1, len(files)):
-            pos = -0.15 * i  # approx width of axis with tick marks, tick labels and label
+            # approx width of axis with tick marks, tick labels and label
+            pos = -0.15 * i
+
             self.axes[i].spines['left'].set_position(('axes', pos))
             self.axes[i].get_yaxis().get_offset_text().set_x(pos)
 
@@ -127,19 +131,24 @@ class ProfileSlider:
         self.title = self.fig.suptitle("Title")
         slider_ax = self.fig.add_axes(
             [0.15, 0.025, 0.7, 0.05])  # x, y, width, height
-        self.slider = Slider(ax=slider_ax, label='Time', valmin=self.tmin,
-                             valmax=self.tmax, valinit=self.tmin, valfmt='%.0f min')
+        self.slider = Slider(
+            ax=slider_ax, label='Time',
+            valmin=self.tmin, valmax=self.tmax, valinit=self.tmin,
+            valfmt='%.0f min'
+        )
         self.i = 0
 
         self.slider.on_changed(self.update)
 
     def key(self, event):
         if event.key == 'left':
-            if self.slider.val > self.tmin:  # check that we have room to move slider
+            # check that we have room to move slider
+            if self.slider.val > self.tmin:
                 self.i -= 1
                 self.slider.set_val(self.t[self.i])
         elif event.key == 'right':
-            if self.slider.val < self.tmax:  # check that we have room to move slider
+            # check that we have room to move slider
+            if self.slider.val < self.tmax:
                 self.i += 1
                 self.slider.set_val(self.t[self.i])
         else:
@@ -158,7 +167,8 @@ class ProfileSlider:
         self.title.set_text("t = %d minutes (#%d)" % (self.t[i], i))
 
         # fig.canvas.blit(ax.bbox) # blit just axis
-        # self.fig.canvas.blit(self.fig.bbox) # blit everything to get new title -- this might leak memory?
+        # self.fig.canvas.blit(self.fig.bbox) # blit everything to get new
+        # title -- this might leak memory?
 
     def file_len(self, fname):
         with open(fname) as f:
